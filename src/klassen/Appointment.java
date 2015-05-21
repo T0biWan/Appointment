@@ -11,7 +11,7 @@ public class Appointment {
 	private StringProperty endzeit		= new SimpleStringProperty();
 	private StringProperty kategorie	= new SimpleStringProperty();
 	private StringProperty notiz		= new SimpleStringProperty();
-	private StringProperty appointnemnt = new SimpleStringProperty();
+//	private StringProperty appointnemnt = new SimpleStringProperty();
 
 	
 	//Konstruktor
@@ -22,15 +22,21 @@ public class Appointment {
 		setEndzeit(endzeit);
 		setKategorie(kategorie);
 		setNotiz(notiz);
-		appointnemnt.bind(datum.concat(""));
 	}
 	
 	//Standartkonstruktor
 	public Appointment () {
-		
 	}
 	
 	//Kopierkonstruktor
+	public Appointment (Appointment termin) {
+		setDatum(termin.getDatum());
+		setTitel(termin.getTitel());
+		setStartzeit(termin.getStartzeit());
+		setEndzeit(termin.getEndzeit());
+		setKategorie(termin.getKategorie());
+		setNotiz(termin.getNotiz());
+	}
 	
 	//Getter - StringProperty
 	public StringProperty datum() {
@@ -109,7 +115,12 @@ public class Appointment {
 
 	//Methoden
 	public String toString() {
-		String appointmentString = "Appointment:\nDatum:\t\t"+ getDatum()+ "\nTitel:\t\t"+ getTitel()+  "\nStartzeit:\t"+ getStartzeit()+ "\nEndzeit:\t"+ getEndzeit()+ "\nKategorie:\t"+ getKategorie()+ "\nNotiz:\t\t"+ getNotiz();
+		String appointmentString = 	"Appointment:\nDatum:\t\t"+ getDatum()+
+									"\nTitel:\t\t"+ getTitel()+ 
+									"\nStartzeit:\t"+ getStartzeit()+
+									"\nEndzeit:\t"+ getEndzeit()+
+									"\nKategorie:\t"+ getKategorie()+
+									"\nNotiz:\t\t"+ getNotiz();
 		return appointmentString;
 	}
 	
@@ -119,6 +130,6 @@ public class Appointment {
 	public static void main(String[] args) {
 		//Appointment erstellen & alle Methoden usw. ausführen.
 		Appointment test = new Appointment("28.05.15", "Pamela besuchen", "17:00", "20:30", "Urlaub", "Dresden");
-		System.out.println(test.toString());
+		System.out.println(test);
 	}
 }
