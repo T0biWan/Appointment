@@ -1,17 +1,24 @@
 package klassen;
 
+import exceptions.FormatExceptions;
+
 public class Zeitrechnung {
 	//Konstruktor
 	public Zeitrechnung() {
 	}
 	
 	//Methoden
-	public int stringTimeToIntSeconds (String zeit) {
+	public int stringTimeToIntSeconds (String zeit) throws FormatExceptions {
 		int stunden;
 		int minuten;
 		int sekunden;
 		
-		//Gegebenen String zerlegen
+		//String testen, ohne ':' --> Exception!
+		if(!(zeit.contains(":"))) {
+			throw new FormatExceptions("Uhrzeiten müssen folgendes Format haben: \"HH:MM\"");
+		}
+		
+		//String zerlegen
 		String [] zeitArr;
 		zeitArr=zeit.split(":");
 

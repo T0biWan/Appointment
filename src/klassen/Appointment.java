@@ -1,5 +1,7 @@
 package klassen;
 
+import exceptions.FormatExceptions;
+import exceptions.TimeException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -125,13 +127,13 @@ public class Appointment {
 		return appointmentString;
 	}
 	
-	public void testeZeit (String startzeit, String endzeit) {
+	public void testeZeit (String startzeit, String endzeit) throws FormatExceptions, TimeException {
 		int startzeitInSekunden = zeitrechner.stringTimeToIntSeconds(startzeit);
 		int endzeitInSekunden = zeitrechner.stringTimeToIntSeconds(endzeit);
 		int ergebnis = endzeitInSekunden - startzeitInSekunden;
 		
 		if(ergebnis < 0) {
-			System.out.println("Hoot Hoot.");
+			throw new TimeException ("Endzeit liegt vor Startzeit");
 		}
 	}
 	
