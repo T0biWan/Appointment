@@ -1,6 +1,7 @@
 package klassen;
 
 import exceptions.FormatExceptions;
+import exceptions.TimeException;
 
 public class Zeitrechnung {
 	//Konstruktor
@@ -8,7 +9,7 @@ public class Zeitrechnung {
 	}
 	
 	//Methoden
-	public int stringTimeToIntSeconds (String zeit) throws FormatExceptions {
+	public int stringTimeToIntSeconds (String zeit) throws FormatExceptions, TimeException {
 		int stunden;
 		int minuten;
 		int sekunden;
@@ -21,21 +22,20 @@ public class Zeitrechnung {
 		//String zerlegen
 		String [] zeitArr;
 		zeitArr=zeit.split(":");
-		
-		//Strings auf richtige Länge prüfen
-		if(zeitArr[0].length() > 2 | zeitArr[1].length() > 2) {
-			throw new FormatExceptions("Uhrzeiten müssen folgendes Format haben: \"HH:MM\"");
-		}
 
 		//Strings zu int casten
 		stunden = Integer.parseInt(zeitArr[0]);
 		minuten = Integer.parseInt(zeitArr[1]);
 		
+		if(stunden > 59 | stunden < 0 | minuten > 59 | minuten < 0) {
+			throw new TimeException("Zeit liegt nicht im Wertebereich (0 - 59).");
+		}
+		
 		//Zeiten in Sekunden umrechnen und addieren
 		sekunden = stundeZuSekunde(stunden) + minuteZuSekunde(minuten);
 		
 		return sekunden;
-	}
+	}	
 	
 	public int stundeZuSekunde (int stunde) {
 		int sekunde = stunde * 3600;
@@ -46,5 +46,5 @@ public class Zeitrechnung {
 		int sekunde = minute * 60;
 		return sekunde;
 	}
-	
+
 }

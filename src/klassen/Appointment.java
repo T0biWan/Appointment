@@ -13,7 +13,6 @@ public class Appointment {
 	private StringProperty	endzeit			= new SimpleStringProperty();
 	private StringProperty	kategorie		= new SimpleStringProperty();
 	private StringProperty	notiz			= new SimpleStringProperty();
-//	private StringProperty	appointnemnt	= new SimpleStringProperty();
 	private Zeitrechnung	zeitrechner		= new Zeitrechnung();
 
 	
@@ -27,7 +26,7 @@ public class Appointment {
 		setNotiz(notiz);
 		
 		//prüfen ob Start und Endzeit okay sind
-		testeZeit(startzeit, endzeit);
+		testeZeitFenster(startzeit, endzeit);
 	}
 	
 	//Standartkonstruktor
@@ -35,7 +34,7 @@ public class Appointment {
 	}
 	
 	//Kopierkonstruktor
-	public Appointment (Appointment termin) {
+	public Appointment (Appointment termin) throws FormatExceptions, TimeException {
 		setDatum(termin.getDatum());
 		setTitel(termin.getTitel());
 		setStartzeit(termin.getStartzeit());
@@ -99,11 +98,13 @@ public class Appointment {
 		this.datum.set(datum);
 	}
 	
-	public void setStartzeit(String startzeit) {
+	public void setStartzeit(String startzeit) throws FormatExceptions, TimeException {
+		zeitrechner.stringTimeToIntSeconds(startzeit);
 		this.startzeit.set(startzeit);
 	}
 
-	public void setEndzeit(String endzeit) {
+	public void setEndzeit(String endzeit) throws FormatExceptions, TimeException {
+		zeitrechner.stringTimeToIntSeconds(endzeit);
 		this.endzeit.set(endzeit);
 	}
 
@@ -130,11 +131,10 @@ public class Appointment {
 		return appointmentString;
 	}
 	
-	public void testeZeit (String startzeit, String endzeit) throws FormatExceptions, TimeException {
+	public void testeZeitFenster (String startzeit, String endzeit) throws FormatExceptions, TimeException {
 		int startzeitInSekunden = zeitrechner.stringTimeToIntSeconds(startzeit);
 		int endzeitInSekunden = zeitrechner.stringTimeToIntSeconds(endzeit);
 		int ergebnis = endzeitInSekunden - startzeitInSekunden;
-		
 		if(ergebnis < 0) {
 			throw new TimeException ("Endzeit liegt vor Startzeit");
 		}
