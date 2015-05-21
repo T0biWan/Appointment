@@ -27,7 +27,7 @@ public class Zeitrechnung {
 		stunden = Integer.parseInt(zeitArr[0]);
 		minuten = Integer.parseInt(zeitArr[1]);
 		
-		if(stunden > 59 | stunden < 0 | minuten > 59 | minuten < 0) {
+		if(stunden > 23 | stunden < 0 | minuten > 59 | minuten < 0) {
 			throw new TimeException("Zeit liegt nicht im Wertebereich (0 - 59).");
 		}
 		
