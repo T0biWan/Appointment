@@ -18,13 +18,16 @@ public class Appointment {
 
 	
 	//Konstruktor
-	public Appointment (String datum, String titel, String startzeit, String endzeit, String kategorie, String notiz) {
+	public Appointment (String datum, String titel, String startzeit, String endzeit, String kategorie, String notiz) throws FormatExceptions, TimeException {
 		setDatum(datum);
 		setTitel(titel);
 		setStartzeit(startzeit);
 		setEndzeit(endzeit);
 		setKategorie(kategorie);
 		setNotiz(notiz);
+		
+		//prüfen ob Start und Endzeit okay sind
+		testeZeit(startzeit, endzeit);
 	}
 	
 	//Standartkonstruktor

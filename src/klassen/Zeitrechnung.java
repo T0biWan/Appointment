@@ -21,6 +21,11 @@ public class Zeitrechnung {
 		//String zerlegen
 		String [] zeitArr;
 		zeitArr=zeit.split(":");
+		
+		//Strings auf richtige Länge prüfen
+		if(zeitArr[0].length() > 2 | zeitArr[1].length() > 2) {
+			throw new FormatExceptions("Uhrzeiten müssen folgendes Format haben: \"HH:MM\"");
+		}
 
 		//Strings zu int casten
 		stunden = Integer.parseInt(zeitArr[0]);
