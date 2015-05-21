@@ -5,13 +5,14 @@ import javafx.beans.property.StringProperty;
 
 public class Appointment {
 	//Attribute
-	private StringProperty datum		= new SimpleStringProperty();
-	private StringProperty titel		= new SimpleStringProperty();
-	private StringProperty startzeit	= new SimpleStringProperty();
-	private StringProperty endzeit		= new SimpleStringProperty();
-	private StringProperty kategorie	= new SimpleStringProperty();
-	private StringProperty notiz		= new SimpleStringProperty();
-//	private StringProperty appointnemnt = new SimpleStringProperty();
+	private StringProperty	datum			= new SimpleStringProperty();
+	private StringProperty	titel			= new SimpleStringProperty();
+	private StringProperty	startzeit		= new SimpleStringProperty();
+	private StringProperty	endzeit			= new SimpleStringProperty();
+	private StringProperty	kategorie		= new SimpleStringProperty();
+	private StringProperty	notiz			= new SimpleStringProperty();
+//	private StringProperty	appointnemnt	= new SimpleStringProperty();
+	private Zeitrechnung	zeitrechner		= new Zeitrechnung();
 
 	
 	//Konstruktor
@@ -124,12 +125,14 @@ public class Appointment {
 		return appointmentString;
 	}
 	
-
-	
-	//Main
-	public static void main(String[] args) {
-		//Appointment erstellen & alle Methoden usw. ausführen.
-		Appointment test = new Appointment("28.05.15", "Pamela besuchen", "17:00", "20:30", "Urlaub", "Dresden");
-		System.out.println(test);
+	public void testeZeit (String startzeit, String endzeit) {
+		int startzeitInSekunden = zeitrechner.stringTimeToIntSeconds(startzeit);
+		int endzeitInSekunden = zeitrechner.stringTimeToIntSeconds(endzeit);
+		int ergebnis = endzeitInSekunden - startzeitInSekunden;
+		
+		if(ergebnis < 0) {
+			System.out.println("Hoot Hoot.");
+		}
 	}
+	
 }
