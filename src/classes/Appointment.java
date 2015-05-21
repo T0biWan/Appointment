@@ -1,5 +1,10 @@
 package classes;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -7,22 +12,17 @@ import javafx.beans.property.StringProperty;
 
 public class Appointment {
 	
-	private StringProperty datum,startUhrzeit, endUhrzeit, terminkategorie, terminbezeichnung, terminbeschreibung;
-	private SimpleIntegerProperty dauer; 
+	private StringProperty datum,startUhrzeit, endUhrzeit, terminkategorie, terminbezeichnung, terminbeschreibung, dauer; 
+	private Date dt = new Date();
 	
 	public Appointment(){
-		datum = new SimpleStringProperty();
+		datum = new SimpleStringProperty(dt.toString());
 		startUhrzeit = new SimpleStringProperty();
 		endUhrzeit = new SimpleStringProperty();
 		terminkategorie = new SimpleStringProperty();
 		terminbezeichnung = new SimpleStringProperty(); 
 		terminbeschreibung = new SimpleStringProperty();
-		dauer = new SimpleIntegerProperty();
-		
-		this.strToMin(endUhrzeit.get());
-		this.strToMin(startUhrzeit.get());
-		
-		//dauer.bind( );
+		dauer = new SimpleStringProperty();
 	}
 	
 	public String getDatum() {
@@ -30,7 +30,19 @@ public class Appointment {
 	}
 
 	public void setDatum(String datum) {
-        this.datum.set(datum);
+		
+		if(datum != null && !datum.isEmpty()){
+			
+			DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+			
+	        try {
+	        	dt = df.parse(datum);
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	        }
+		}
+		
+        this.datum.set(dt.toString());
 	}
 	
 	public StringProperty getDatumProperty(){ return datum;}
@@ -50,12 +62,7 @@ public class Appointment {
 	}
 
 	public void setEndUhrzeit(String endUhrzeit) {
-		
-		if(strToMin(endUhrzeit) - strToMin(startUhrzeit.get()) > 0 ){
-			this.endUhrzeit.set(endUhrzeit);
-		}else{
-			System.out.println("Enduhrzeit muss größer als Startuhrzeit sein");
-		}
+		this.endUhrzeit.set(endUhrzeit);
 	}
 	
 	public StringProperty getEndUhrzeitProperty(){ return endUhrzeit;}
@@ -92,27 +99,22 @@ public class Appointment {
 	
 	public StringProperty getTerminbeschreibungProperty(){ return terminbeschreibung;}
 	
-	public int getDauer() {
+	public String getDauer() {
 		return dauer.get();
 	}
 	
-	public IntegerProperty getDauerProperty(){ return dauer;}
+	public StringProperty getDauerProperty(){ return dauer;}
 	
-	private IntegerProperty strToMin(String str){
-		
-		String[] time = str.split(":");
-		
-		IntegerProperty i = new SimpleIntegerProperty(Integer.parseInt(time[0]) * 60 + Integer.parseInt(time[1]));
-		
-		return i;
-	}
 
 	public static void main(String[] args) {
 		Appointment ap = new Appointment();
-
-		ap.setStartUhrzeit("10:30");
-		ap.setEndUhrzeit("11:30");
-
+		
+		System.out.println(ap.getDatum());
+		
+		ap.setDatum("12.07.2015");
+		
+		System.out.println(ap.getDatum());
+	
 	}
 
 }
