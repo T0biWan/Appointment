@@ -1,6 +1,7 @@
 package classes;
 
 import java.text.*;
+import java.util.Calendar;
 import java.util.Date;
 
 import exceptions.WrongTimeException;
@@ -24,8 +25,9 @@ public class Appointment {
 	 * schreiben würde z.B. xx.xx.xxxx. Welche es gibt erfährt man unter http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
 	 */
 	
-	private Date startDate = new Date();
-	private Date endDate = new Date();
+	private Date startDate, endDate;
+	// das Pattern "dd.MM.yyyy HH:mm" steht für d = Day in month , M = Month in year , y = Year, H = Hour in day (0-23) , m = Minute in hour
+	private DateFormat defaultFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 	// das Pattern "dd.MM.yyyy" steht für d = Day in month , M = Month in year , y = Year 
 	private DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 	// das Pattern "HH:mm" steht für H = Hour in day (0-23) , m = Minute in hour
@@ -35,17 +37,25 @@ public class Appointment {
 	 * Hier werden alle unsere Properties initialisiert. Damit auch bei einem leeren Appointment alles glatt geht 
 	 * kreiere ich per Default Datum und Zeit von Heute in unserem gewünschten Format.
 	 */
-	private StringProperty datum = new SimpleStringProperty(dateFormat.format(startDate));
-	private StringProperty startUhrzeit = new SimpleStringProperty(timeFormat.format(startDate));
-	private StringProperty endUhrzeit = new SimpleStringProperty(timeFormat.format(endDate));
+	private StringProperty datum = new SimpleStringProperty();
+	private StringProperty startUhrzeit = new SimpleStringProperty();
+	private StringProperty endUhrzeit = new SimpleStringProperty();
 	private StringProperty terminkategorie = new SimpleStringProperty();
 	private StringProperty terminbezeichnung = new SimpleStringProperty(); 
 	private StringProperty terminbeschreibung = new SimpleStringProperty();
-	private StringProperty dauer = new SimpleStringProperty(zeitDauer());
+	private StringProperty dauer = new SimpleStringProperty();
 	
 	// Standardkonstruktor
 	public Appointment(){
-
+		startDate = new Date();
+		endDate = new Date();
+		this.datum.set(dateFormat.format(startDate));
+		this.startUhrzeit.set(timeFormat.format(startDate));
+		this.endUhrzeit.set(timeFormat.format(endDate));
+		this.terminkategorie.set("Normal");
+		this.terminbezeichnung.set("Neuer Termin"); 
+		this.terminbeschreibung.set("");
+		this.dauer.set(zeitDauer());
 	}
 	
 	// Kopierkonstruktor
@@ -81,6 +91,8 @@ public class Appointment {
 	        try {
 	        	// Wir schauen ob das eingegebene Datum das richtige Format hat
 	        	startDate = dateFormat.parse(datum);
+	        	// unser endZeit ist 23:59:999
+	        	endDate = new Date(startDate.getTime() + (999*60*60*24));
 	        } catch (ParseException e) {
 	        	// uuuppssss hat es nicht
 	            e.printStackTrace();
@@ -99,14 +111,20 @@ public class Appointment {
 	public void setStartUhrzeit(String startUhrzeit) throws WrongTimeException {
 		// Kontrolle ob es eine Uhrzeit gibt
 		if(startUhrzeit != null && !startUhrzeit.isEmpty()){
+			// Wir schauen ob die eingegebene Zeit das richtige Format hat
 	        try {
-	        	// Wir schauen ob die eingegebene Zeit das richtige Format hat
-	        	Date startDateNew = timeFormat.parse(startUhrzeit);
-	        	// wir kontrollieren, ob die Startzeit wirklich vor der Endzeit liegt 
+	        	
+	        	Date startDateNew = defaultFormat.parse(this.datum.get() +" "+ startUhrzeit);
+	        
+	    		if(!dateFormat.format(startDateNew).equals(dateFormat.format(this.startDate)))
+	    			throw new WrongTimeException("Die Uhrzeit darf maximal 24h betragen!");
+	    		
+	    		// wir kontrollieren, ob die Startzeit wirklich vor der Endzeit liegt, wenn nicht dann setzen wir die endZeit auf die auf die Startzeit
 	    		if(!startDateNew.before(endDate))
-	    			throw new WrongTimeException("Der Start (" + startUhrzeit + ") des Termines muss vor dem Ende (" + timeFormat.format(endDate) + ") liegen.");
+	    			throw new WrongTimeException("Die Startzeit (" + startUhrzeit + ") des Termines muss vor der Endzeit (" + timeFormat.format(endDate) + ") liegen.");
+	    		
 	    		// Wir überschreiben unser Datum mit dem Neuen
-	    		startDate = startDateNew;
+	    		this.startDate = startDateNew;
 	        } catch (ParseException e) {
 	        	// uuuppssss hat es nicht
 	            e.printStackTrace();
@@ -133,11 +151,14 @@ public class Appointment {
 		if(endUhrzeit != null && !endUhrzeit.isEmpty()){
 	        try {
 	        	// Wir schauen ob die eingegebene Zeit das richtige Format hat
-	        	Date endDateNew = timeFormat.parse(endUhrzeit);
+	        	Date endDateNew = defaultFormat.parse(this.datum.get() + " " + endUhrzeit);
 	        	
 	        	// wir kontrollieren, ob die Endzeit wirklich nach der Startzeit liegt
 	    		if(!endDateNew.after(startDate))
-	    			throw new WrongTimeException("Das Ende (" + endUhrzeit + ") des Termines darf nicht vor dem Start (" + timeFormat.format(startDate) + ") liegen.");
+	    			throw new WrongTimeException("Die Endzeit (" + endUhrzeit + ") des Termines darf nicht vor der Startzeit (" + timeFormat.format(startDate) + ") liegen.");
+	    		
+	    		if(!dateFormat.format(endDateNew).equals(dateFormat.format(endDate)))
+	    			throw new WrongTimeException("Die Uhrzeit darf maximal 24h betragen!");
 	    		
 	    		// Wir überschreiben unser Datum mit dem Neuen
 	    		endDate = endDateNew;
@@ -209,6 +230,8 @@ public class Appointment {
 		return String.valueOf(diffHours + ":" + diffMinutes);
 	}
 	
+	//private boolean lassThan24
+	
 	public String toString(){
 		String str = 
 				"\nDatum: " + this.getDatum() + 
@@ -250,7 +273,7 @@ public class Appointment {
 		
 		try {
 			
-			Appointment ap2 = new Appointment("12.12.2015", "10:00", "33:35", "Uni", "Mathe Klausur", "Wir schreiben eine dicke Klausur");
+			Appointment ap2 = new Appointment("12.12.2015", "11:00", "13:00", "Uni", "Mathe Klausur", "Wir schreiben eine dicke Klausur");
 			
 			System.out.println("Datum: " + ap2.getDatum());
 			System.out.println("Start Uhrzeit: " + ap2.getStartUhrzeit());
@@ -259,6 +282,10 @@ public class Appointment {
 			System.out.println("Terminkategorie: " + ap2.getTerminkategorie());
 			System.out.println("Terminbezeichnung: " + ap2.getTerminbezeichnung());
 			System.out.println("Terminbeschreibung: " + ap2.getTerminbeschreibung());
+			
+			
+			ap2.setStartUhrzeit("14:00");
+			
 		} catch (WrongTimeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
