@@ -1,6 +1,6 @@
 package klassen;
 
-import exceptions.FormatExceptions;
+import exceptions.FormatException;
 import exceptions.TimeException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -17,7 +17,7 @@ public class Appointment {
 
 	
 	//Konstruktor
-	public Appointment (String datum, String titel, String startzeit, String endzeit, String kategorie, String notiz) throws FormatExceptions, TimeException {
+	public Appointment (String datum, String titel, String startzeit, String endzeit, String kategorie, String notiz) throws FormatException, TimeException {
 		setDatum(datum);
 		setTitel(titel);
 		setStartzeit(startzeit);
@@ -34,7 +34,7 @@ public class Appointment {
 	}
 	
 	//Kopierkonstruktor
-	public Appointment (Appointment termin) throws FormatExceptions, TimeException {
+	public Appointment (Appointment termin) throws FormatException, TimeException {
 		setDatum(termin.getDatum());
 		setTitel(termin.getTitel());
 		setStartzeit(termin.getStartzeit());
@@ -98,12 +98,12 @@ public class Appointment {
 		this.datum.set(datum);
 	}
 	
-	public void setStartzeit(String startzeit) throws FormatExceptions, TimeException {
+	private void setStartzeit(String startzeit) throws FormatException, TimeException {
 		zeitrechner.stringTimeToIntSeconds(startzeit);
 		this.startzeit.set(startzeit);
 	}
 
-	public void setEndzeit(String endzeit) throws FormatExceptions, TimeException {
+	private void setEndzeit(String endzeit) throws FormatException, TimeException {
 		zeitrechner.stringTimeToIntSeconds(endzeit);
 		this.endzeit.set(endzeit);
 	}
@@ -131,7 +131,7 @@ public class Appointment {
 		return appointmentString;
 	}
 	
-	public void testeZeitFenster (String startzeit, String endzeit) throws FormatExceptions, TimeException {
+	public void testeZeitFenster (String startzeit, String endzeit) throws FormatException, TimeException {
 		int startzeitInSekunden = zeitrechner.stringTimeToIntSeconds(startzeit);
 		int endzeitInSekunden = zeitrechner.stringTimeToIntSeconds(endzeit);
 		int ergebnis = endzeitInSekunden - startzeitInSekunden;
@@ -140,7 +140,7 @@ public class Appointment {
 		}
 	}
 	
-	public void changeTime (String startzeit, String endzeit) throws FormatExceptions, TimeException {
+	public void changeTime (String startzeit, String endzeit) throws FormatException, TimeException {
 		testeZeitFenster(startzeit, endzeit);
 		setStartzeit(startzeit);
 		setEndzeit(endzeit);

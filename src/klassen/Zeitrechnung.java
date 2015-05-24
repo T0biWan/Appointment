@@ -1,6 +1,6 @@
 package klassen;
 
-import exceptions.FormatExceptions;
+import exceptions.FormatException;
 import exceptions.TimeException;
 
 public class Zeitrechnung {
@@ -9,19 +9,46 @@ public class Zeitrechnung {
 	}
 	
 	//Methoden
-	public int stringTimeToIntSeconds (String zeit) throws FormatExceptions, TimeException {
+	public int stringTimeToIntSeconds (String zeit) throws FormatException, TimeException {
 		int stunden;
 		int minuten;
 		int sekunden;
 		
 		//String testen, ohne ':' --> Exception!
 		if(!(zeit.contains(":"))) {
-			throw new FormatExceptions("Uhrzeiten müssen folgendes Format haben: \"HH:MM\"");
+			throw new FormatException("Uhrzeiten müssen folgendes Format haben: \"HH:MM\"");
 		}
 		
 		//String zerlegen
 		String [] zeitArr;
 		zeitArr=zeit.split(":");
+		
+		//Vervollständige, falls Eingabe lautet ":"
+		if(zeitArr.length < 1) {
+			try {
+				zeitArr[0].isEmpty();
+			} catch (Exception e) {
+				String [] zeitArr2 = {"0", "0"};
+				zeitArr = zeitArr2;
+			}
+		}
+		
+		//Vervollständige, falls Eingabe lautet: ":5" oder "1:"
+		if(zeitArr.length < 2) {
+			try {
+				zeitArr[0].isEmpty();
+			} catch (Exception e) {
+				String [] zeitArr2 = {"0", zeitArr[1]};
+				zeitArr = zeitArr2;
+			}
+			
+			try {
+				zeitArr[1].isEmpty();
+			} catch (Exception e) {
+				String [] zeitArr2 = {zeitArr[0], "0"};
+				zeitArr = zeitArr2;
+			}
+		}
 
 		//Strings zu int casten
 		stunden = Integer.parseInt(zeitArr[0]);
