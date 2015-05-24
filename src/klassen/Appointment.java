@@ -140,4 +140,9 @@ public class Appointment {
 		}
 	}
 	
+	public void changeTime (String startzeit, String endzeit) throws FormatExceptions, TimeException {
+		testeZeitFenster(startzeit, endzeit);
+		setStartzeit(startzeit);
+		setEndzeit(endzeit);
+	}
 }
