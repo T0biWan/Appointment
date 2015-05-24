@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Appointment {
-	//Attribute - toll Tobi
+	//Attribute
 	private StringProperty	datum			= new SimpleStringProperty();
 	private StringProperty	titel			= new SimpleStringProperty();
 	private StringProperty	startzeit		= new SimpleStringProperty();
