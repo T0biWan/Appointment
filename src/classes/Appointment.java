@@ -9,11 +9,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Appointment - Ist ein ADT das seine Attribute auch als Properties enthält.
+ * Appointment
+ * Ist ein ADT das seine Attribute auch als Properties enthält.
  * Dabei kann der Benutzer zwischen den Rückgabetypen String und Property
  * wählen. 
  * 
  * */
+
 
 public class Appointment {	
 	
