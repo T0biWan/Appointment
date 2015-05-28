@@ -1,5 +1,11 @@
 package klassen;
 
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import exceptions.FormatException;
 import exceptions.TimeException;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +20,8 @@ public class Appointment {
 	private StringProperty	kategorie		= new SimpleStringProperty();
 	private StringProperty	notiz			= new SimpleStringProperty();
 	private Zeitrechnung	zeitrechner		= new Zeitrechnung();
+	//Date bekommt bei leeren Konstruktor automatisch Datum, Uhrzeit etc. von heute.
+	private Date			datumHeute		= new Date();
 
 	
 	//Konstruktor
@@ -30,7 +38,14 @@ public class Appointment {
 	}
 	
 	//Standartkonstruktor
-	public Appointment () {
+	public Appointment () throws FormatException, TimeException {
+		//Setze Datum zu heutigem Datum.
+		DateFormat gewünschtesDatumFormat = new SimpleDateFormat("dd.MM.yyyy");
+		setDatum(gewünschtesDatumFormat.format(datumHeute));
+		
+		DateFormat gewünschtesZeitFormat = new SimpleDateFormat ("HH:mm");
+		setStartzeit(gewünschtesZeitFormat.format(datumHeute));
+		setEndzeit(gewünschtesZeitFormat.format(datumHeute));
 	}
 	
 	//Kopierkonstruktor
