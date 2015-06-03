@@ -1,9 +1,5 @@
 package klassen;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import exceptions.FormatException;
 import exceptions.StringIsEmptyException;
 import exceptions.WertebereichException;
@@ -22,20 +18,19 @@ public class Appointment {
 	private Zeitrechnung	zeitrechner		= new Zeitrechnung();
 	
 	//Konstruktor
+	// zwei Methoden testeZeitString endzeit und startzeit, ist der String leer? Stimmt das Format?
+	
 	public Appointment (String datum, String titel, String startzeit, String endzeit, String kategorie, String notiz) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
 		setDatum(datum);
 		setTitel(titel);
 		setStartzeit(startzeit);
 		setEndzeit(endzeit);
-		setKategorie(kategorie);
-		setNotiz(notiz);
-		
 		//prüfen ob Start und Endzeit okay sind
-		testeZeitString(startzeit);
-		testeZeitString(endzeit);
-		if(!testeZeitFenster(startzeit, endzeit)) {
+		if(!testeZeitFenster(getStartzeit(), getEndzeit())) {
 			throw new WertebereichException ("Endzeit liegt vor Startzeit");
 		}
+		setKategorie(kategorie);
+		setNotiz(notiz);
 	}
 	
 	//Standartkonstruktor
@@ -43,18 +38,15 @@ public class Appointment {
 		//Setze Datum zu heutigem Datum.
 //		DateFormat gewünschtesDatumFormat = new SimpleDateFormat("dd.MM.yyyy");
 //		setDatum(gewünschtesDatumFormat.format(datumHeute));
-//		
 //		DateFormat gewünschtesZeitFormat = new SimpleDateFormat ("HH:mm");
-//
-////		setStartzeit(gewünschtesZeitFormat.format(datumHeute));
-//		setStartzeit(gewünschtesZeitFormat.format("12:15"));
-//
 //		setStartzeit(gewünschtesZeitFormat.format(datumHeute));
-//
+//		setStartzeit(gewünschtesZeitFormat.format("12:15"));
+//		setStartzeit(gewünschtesZeitFormat.format(datumHeute));
 //		setEndzeit(gewünschtesZeitFormat.format(datumHeute));
 	}
 	
 	//Kopierkonstruktor
+	// z.B. wenn man drei mal den selben Termin hat, oder durch Regelmaessigkeit
 	public Appointment (Appointment termin) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
 		setDatum(termin.getDatum());
 		setTitel(termin.getTitel());
@@ -65,27 +57,27 @@ public class Appointment {
 	}
 	
 	//Getter - StringProperty
-	public StringProperty datum() {
+	public StringProperty datumProperty() {
 		return datum;
 	}
 	
-	public StringProperty startzeit() {
+	public StringProperty startzeitProperty() {
 		return startzeit;
 	}
 	
-	public StringProperty endzeit() {
+	public StringProperty endzeitProperty() {
 		return endzeit;
 	}
 	
-	public StringProperty titel() {
+	public StringProperty titelProperty() {
 		return titel;
 	}
 	
-	public StringProperty notiz() {
+	public StringProperty notizProperty() {
 		return notiz;
 	}
 	
-	public StringProperty kategorie() {
+	public StringProperty kategorieProperty() {
 		return kategorie;
 	}
 	
@@ -115,6 +107,8 @@ public class Appointment {
 	}
 	
 	//Setter
+	
+	// 
 	public void setDatum(String datum) throws FormatException, WertebereichException, StringIsEmptyException {
 		testeDatumString(datum);
 		this.datum.set(datum);
@@ -143,6 +137,8 @@ public class Appointment {
 	}
 
 	//Methoden
+	// 1:1 zu CD String Methode
+	// Gibt Werte aus
 	public String toString() {
 		String appointmentString = 	"Appointment:\nDatum:\t\t"+ getDatum()+
 									"\nTitel:\t\t"+ getTitel()+ 
@@ -152,7 +148,8 @@ public class Appointment {
 									"\nNotiz:\t\t"+ getNotiz();
 		return appointmentString;
 	}
-	
+	// Die Dauer des Termins, muss positiv sein (endzeit ist grösser als startzeit)
+	// Rechnet gegebene Zeiten in Sekunden um, zeitrechner wird aufgerufen, die Klasse Zeitrechnung wird aufgerufen
 	public boolean testeZeitFenster (String startzeit, String endzeit) throws FormatException, WertebereichException {
 		int startzeitInSekunden = zeitrechner.stringTimeToIntSeconds(startzeit);
 		int endzeitInSekunden = zeitrechner.stringTimeToIntSeconds(endzeit);
@@ -164,14 +161,16 @@ public class Appointment {
 		}
 	}
 	
+	// maximal 10 Zeichen für TT.MM.YYYY
  	public boolean testeDatumFormat (String datum) {
-		if(datum.contains("/") & (datum.length() < 11) & (datum.length() > 6)) {
+		if(datum.contains("/") && (datum.length() == 10)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
+ 	// Tage dürfen nicht mehr als 31 sein. 
 	public boolean testeDatumWertebereich (String datum) {
 		int tag;
 		int monat;
@@ -186,6 +185,7 @@ public class Appointment {
 		jahr = Integer.parseInt(datumArr[2]);
 		
 		//Hint: jahr < 1000 da 1000 die kleinste vierstellige, nat., Zahl ist.
+		// mindestens 1 bis 31 (tage), 1 bis 12 (Monate) und 1000 (Jahre), kleinste Vierstellige Zahl
 		if((tag < 1) | (tag > 31) | (monat < 1) | (monat > 12) | (jahr < 1000)) {
 			return false;
 		} else {
@@ -256,10 +256,11 @@ public class Appointment {
 		}
 		
 		if(!(testeZeitWertebreich(zeit))) {
-			throw new WertebereichException("Zeit liegt nicht im Wertebereich (0 - 59).");
+			throw new WertebereichException("Zeit liegt nicht im Wertebereich.");
 		}
 	}
 	
+	// ist der String leer? Teste DatumFormat, 
 	public void testeDatumString (String datum) throws FormatException, WertebereichException, StringIsEmptyException {
 		if (datum == null) {
 			throw new StringIsEmptyException("Der übergebene Datumstring ist leer.");
@@ -272,6 +273,10 @@ public class Appointment {
 			throw new WertebereichException("Datum liegt nicht im geforderten Wertebereich.");
 		}
 	}
+	
+	// Nimmt alle Strings oder null entgegen. Methode, die einen Termin ändern kann, z.B. Zeiten ändern
+	// nur setter werden verwendet, testen durch.
+	// Zeitfenster einschieben, welches die event. neue Uhrzeit und event. neue Endzeit überprüft
 	
 	public void changeAppointment (String datum, String titel, String startzeit, String endzeit, String kategorie, String notiz) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
 		if(!(datum == null)) {
@@ -290,7 +295,9 @@ public class Appointment {
 			setEndzeit(endzeit);
 		}
 		
-		testeZeitFenster(getStartzeit(), getEndzeit());
+		if(!testeZeitFenster(getStartzeit(), getEndzeit())) {
+			throw new WertebereichException ("Endzeit liegt vor Startzeit");
+		}
 		
 		if(!(kategorie == null)) {
 			setKategorie(kategorie);
@@ -299,10 +306,10 @@ public class Appointment {
 		if(!(notiz == null)) {
 			setNotiz(notiz);
 		}
-		if(!testeZeitFenster(getStartzeit(), getEndzeit())) {
-			throw new WertebereichException ("Endzeit liegt vor Startzeit");
-		}
 	}
+	
+	// Main erstellt ein Appointment
+	// Beispielhaft ein Appointment bauen, damit der User sich anzeigen lassen kann, was hier eigentlich passiert.
 	
 	public static void main(String[] args) {
 		try {
