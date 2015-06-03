@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import exceptions.FormatException;
-import exceptions.TimeException;
+import exceptions.WertebereichException;
 
 public class ZeitrechnungTest {
 	//Attribute
@@ -17,17 +17,17 @@ public class ZeitrechnungTest {
 	
 	//StringTimeToIntSeconds
 	@Test (expected = FormatException.class)
-	public void testStringTimeToIntSecondsException1 () throws FormatException, TimeException {
+	public void testStringTimeToIntSecondsException1 () throws FormatException, WertebereichException {
 		t.stringTimeToIntSeconds("5");
 	}
 	
-	@Test (expected = TimeException.class)
-	public void testStringTimeToIntSecondsException2 () throws FormatException, TimeException {
+	@Test (expected = WertebereichException.class)
+	public void testStringTimeToIntSecondsException2 () throws FormatException, WertebereichException {
 		t.stringTimeToIntSeconds("24:59");
 	}
 	
 	@Test 
-	public void testStringTimeToIntSeconds () throws FormatException, TimeException {
+	public void testStringTimeToIntSeconds () throws FormatException, WertebereichException {
 		assertEquals(43200, t.stringTimeToIntSeconds(start));
 		assertEquals(0, t.stringTimeToIntSeconds(":"));
 	}

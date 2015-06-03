@@ -6,17 +6,26 @@ import javafx.beans.property.StringProperty;
 import klassen.Appointment;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import exceptions.FormatException;
-import exceptions.TimeException;
+import exceptions.WertebereichException;
 
 public class AppointmentTest {
+	@BeforeClass
+	public void start() {
+		try {
+			Appointment a = new Appointment("28.05.15", "Pamela besuchen", "17:00", "20:30", "Urlaub", "Dresden");
+		} catch (FormatException | WertebereichException e) {
+			e.printStackTrace();
+		}
+	}
 
 	//Getter
 	@Test
-	public void testGetter() throws FormatException, TimeException {
-		Appointment a = new Appointment("28.05.15", "Pamela besuchen", "17:00", "20:30", "Urlaub", "Dresden");
+	public void testGetter() throws FormatException, WertebereichException {
+//		Appointment a = new Appointment("28.05.15", "Pamela besuchen", "17:00", "20:30", "Urlaub", "Dresden");
 		assertEquals("Urlaub", a.getKategorie());
 	}
 	
