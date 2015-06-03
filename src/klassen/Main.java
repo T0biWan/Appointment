@@ -18,7 +18,7 @@ public class Main {
 			Appointment termin1 = new Appointment("28/05/2015", "Pamela besuchen", "17:00", "20:30", "Urlaub", "Dresden");
 			System.out.println();
 			
-		} catch (FormatException | WertebereichException | ZeitenKollisionException | StringIsEmptyException | ParseException e) {
+		} catch (FormatException | WertebereichException | ZeitenKollisionException | StringIsEmptyException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
 	}
