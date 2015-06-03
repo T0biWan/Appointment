@@ -202,5 +202,4 @@ public class AppointmentTest {
 	public void setEndUhrzeitOver24() throws WrongTimeException {
 		apSpecific2.setEndUhrzeit("24:01");
 	}
-
 }
