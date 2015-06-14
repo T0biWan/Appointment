@@ -20,7 +20,7 @@ public class Appointment {
 	//Konstruktor
 	// zwei Methoden testeZeitString endzeit und startzeit, ist der String leer? Stimmt das Format?
 	
-	public Appointment (String datum, String titel, String startzeit, String endzeit, String kategorie, String notiz) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
+	public Appointment (String datum, String startzeit, String endzeit, String titel, String kategorie, String notiz) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
 		setDatum(datum);
 		setTitel(titel);
 		setStartzeit(startzeit);
@@ -116,11 +116,21 @@ public class Appointment {
 	
 	public void setStartzeit(String startzeit) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
 		testeZeitString(startzeit);
+		
+		if(getEndzeit() != null && !testeZeitFenster(startzeit, getEndzeit())) {
+			throw new WertebereichException ("Endzeit liegt vor Startzeit");
+		}
+		
 		this.startzeit.set(startzeit);
 	}
 
 	public void setEndzeit(String endzeit) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
 		testeZeitString(endzeit);
+
+		if(getStartzeit() != null && !testeZeitFenster(getStartzeit(), endzeit)) {
+			throw new WertebereichException ("Startzeit liegt vor Endzeit");
+		}
+		
 		this.endzeit.set(endzeit);
 	}
 

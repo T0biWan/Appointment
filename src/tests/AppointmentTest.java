@@ -19,8 +19,9 @@ public class AppointmentTest {
 	@BeforeClass
     public static void beforeClass() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException{
 		apDefault = new Appointment(); 
-		apSpecific = new Appointment("12.12.2015", "12:00", "13:00", "Uni", "Mathe Klausur", "Wir schreiben eine dicke Klausur");
-		apSpecific2 = new Appointment("05.04.2015", "10:00", "14:00", "Persönlich", "Geburtstag", "Feiern");
+		apSpecific = new Appointment("12/12/2015", "12:00", "13:00", "Uni", "Mathe Klausur", "Wir schreiben eine dicke Klausur");
+		apSpecific2 = new Appointment("05/04/2015", "10:00", "14:00", "Persönlich", "Geburtstag", "Feiern");
+		System.out.println(apSpecific);
 	}
 
 	@Test
@@ -30,13 +31,13 @@ public class AppointmentTest {
 
 	@Test
 	public void createSpecificAppointment() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException {
-		new Appointment("12.12.2015", "12:00", "13:00", "Uni", "Mathe Klausur", "Wir schreiben eine dicke Klausur");
+		new Appointment("12/12/2015", "12:00", "13:00", "Uni", "Mathe Klausur", "Wir schreiben eine dicke Klausur");
 	}
 	
 	@Test
 	public void setDatum() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException {
-		apDefault.setDatum("18.12.2006");
-		assertEquals("18.12.2006", apDefault.getDatum());
+		apDefault.setDatum("18/12/2006");
+		assertEquals("18/12/2006", apDefault.getDatum());
 	}
 	
 	@Test
@@ -75,7 +76,7 @@ public class AppointmentTest {
 	
 	@Test
 	public void getDatum() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException  {
-		assertEquals("12.12.2015", apSpecific.getDatum());
+		assertEquals("12/12/2015", apSpecific.getDatum());
 	}
 	
 	@Test
@@ -90,12 +91,12 @@ public class AppointmentTest {
 	
 	@Test
 	public void getKategorie() {
-		assertEquals("Uni", apSpecific.getKategorie());
+		assertEquals("Mathe Klausur", apSpecific.getKategorie());
 	}
 	
 	@Test
 	public void getTitel() {
-		assertEquals("Mathe Klausur", apSpecific.getTitel());
+		assertEquals("Uni", apSpecific.getTitel());
 	}
 	
 	@Test
@@ -144,17 +145,17 @@ public class AppointmentTest {
 	 * Empty String Test
 	 */
 	
-	@Test (expected = StringIsEmptyException.class)
+	@Test (expected = FormatException.class)
 	public void setEmptyDatum() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException  {
 		apDefault.setDatum("");
 	}
 	
-	@Test (expected = StringIsEmptyException.class)
+	@Test (expected = FormatException.class)
 	public void setEmptyStartzeit() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException {
 		apDefault.setStartzeit("");
 	}
 	
-	@Test (expected = StringIsEmptyException.class)
+	@Test (expected = FormatException.class)
 	public void setEmptyEndzeit() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException {
 		apDefault.setEndzeit("");
 	}
@@ -181,22 +182,22 @@ public class AppointmentTest {
 	 * Wrong Time Test
 	 * */
 	
-	@Test (expected = ZeitenKollisionException.class)
+	@Test (expected = WertebereichException.class)
 	public void setStartzeitAfterEndzeit() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException {
 		apSpecific2.setStartzeit("23:00");
 	}
 	
-	@Test (expected = ZeitenKollisionException.class)
+	@Test (expected = WertebereichException.class)
 	public void setEndzeitBeforStartzeit() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException {
 		apSpecific2.setEndzeit("01:00");
 	}
 	
-	@Test (expected = ZeitenKollisionException.class)
+	@Test (expected = WertebereichException.class)
 	public void setStartzeitOver24() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException {
 		apSpecific2.setStartzeit("25:00");
 	}
 	
-	@Test (expected = ZeitenKollisionException.class)
+	@Test (expected = WertebereichException.class)
 	public void setEndzeitOver24() throws FormatException, WertebereichException,ZeitenKollisionException,StringIsEmptyException {
 		apSpecific2.setEndzeit("24:01");
 	}
