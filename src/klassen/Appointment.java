@@ -34,15 +34,8 @@ public class Appointment {
 	}
 	
 	//Standartkonstruktor
-	public Appointment () throws FormatException, WertebereichException {
-		//Setze Datum zu heutigem Datum.
-//		DateFormat gewünschtesDatumFormat = new SimpleDateFormat("dd.MM.yyyy");
-//		setDatum(gewünschtesDatumFormat.format(datumHeute));
-//		DateFormat gewünschtesZeitFormat = new SimpleDateFormat ("HH:mm");
-//		setStartzeit(gewünschtesZeitFormat.format(datumHeute));
-//		setStartzeit(gewünschtesZeitFormat.format("12:15"));
-//		setStartzeit(gewünschtesZeitFormat.format(datumHeute));
-//		setEndzeit(gewünschtesZeitFormat.format(datumHeute));
+	public Appointment () {
+
 	}
 	
 	//Kopierkonstruktor
@@ -116,7 +109,7 @@ public class Appointment {
 	
 	public void setStartzeit(String startzeit) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
 		testeZeitString(startzeit);
-		
+		// wir überprüfen, ob schon eine endzeit existiert und schauen ob sie wirklich hinter der startzeit liegt.
 		if(getEndzeit() != null && !testeZeitFenster(startzeit, getEndzeit())) {
 			throw new WertebereichException ("Endzeit liegt vor Startzeit");
 		}
@@ -126,7 +119,7 @@ public class Appointment {
 
 	public void setEndzeit(String endzeit) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
 		testeZeitString(endzeit);
-
+		// wir überprüfen, ob schon eine startzeit existiert und schauen ob sie wirklich vor der endzeit liegt.
 		if(getStartzeit() != null && !testeZeitFenster(getStartzeit(), endzeit)) {
 			throw new WertebereichException ("Startzeit liegt vor Endzeit");
 		}
@@ -284,51 +277,33 @@ public class Appointment {
 		}
 	}
 	
-	// Nimmt alle Strings oder null entgegen. Methode, die einen Termin ändern kann, z.B. Zeiten ändern
-	// nur setter werden verwendet, testen durch.
-	// Zeitfenster einschieben, welches die event. neue Uhrzeit und event. neue Endzeit überprüft
-	
-	public void changeAppointment (String datum, String titel, String startzeit, String endzeit, String kategorie, String notiz) throws FormatException, WertebereichException, ZeitenKollisionException, StringIsEmptyException {
-		if(!(datum == null)) {
-			setDatum(datum);
-		}
-		
-		if(!(titel == null)) {
-			setTitel(titel);
-		}
-		
-		if(!(startzeit == null)) {
-			setStartzeit(startzeit);
-		}
-		
-		if(!(endzeit == null)) {
-			setEndzeit(endzeit);
-		}
-		
-		if(!testeZeitFenster(getStartzeit(), getEndzeit())) {
-			throw new WertebereichException ("Endzeit liegt vor Startzeit");
-		}
-		
-		if(!(kategorie == null)) {
-			setKategorie(kategorie);
-		}
-		
-		if(!(notiz == null)) {
-			setNotiz(notiz);
-		}
-	}
-	
 	// Main erstellt ein Appointment
 	// Beispielhaft ein Appointment bauen, damit der User sich anzeigen lassen kann, was hier eigentlich passiert.
 	
 	public static void main(String[] args) {
+		System.out.println("--------------- Specific Appointment ---------------");
+		Appointment apSpecific;
 		try {
-			Appointment termin = new Appointment();
-			termin.testeDatumWertebereich("28/05/2015");
-			
-		} catch (FormatException | WertebereichException e) {
-			System.out.println("Error: " + e.getMessage());
+			apSpecific = new Appointment("12/12/2015", "12:00", "13:00", "Uni", "Mathe Klausur", "Wir schreiben eine dicke Klausur");
+			System.out.println(apSpecific);
+		} catch (FormatException | WertebereichException
+				| ZeitenKollisionException | StringIsEmptyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
+		System.out.println("--------------- Default Appointment ---------------");
+		Appointment apDefault = new Appointment();
+		System.out.println(apDefault);
+		try {
+			apDefault.setDatum("12/12/2015");
+			System.out.println("--------------- Default Appointment with Date added ---------------");
+			System.out.println(apDefault);
+		} catch (FormatException | WertebereichException
+				| StringIsEmptyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }
